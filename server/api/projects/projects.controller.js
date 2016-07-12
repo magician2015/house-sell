@@ -25,6 +25,9 @@ exports.index = function(req, res) {
 
   var skip = req.query.skip || 0;
   var limit = req.query.limit || 6;
+  if(limit === "all"){
+
+  }
 
   //get category filter
   var query = {};
@@ -32,7 +35,12 @@ exports.index = function(req, res) {
     query.category = {$in: req.query.category.split(',')};
   }
 
-  News.find(query).sort(sort).skip(skip).limit(limit).exec().then(function(news){
+  var findQuery = News.find(query);
+  if(limit !== "all"){
+    findQuery = findQuery.sort(sort).skip(skip);
+  }
+
+  findQuery.limit(limit).exec().then(function(news){
   	return res.status(200).json({news: news});
   }, function(err){
   	return handleError(res, err); 

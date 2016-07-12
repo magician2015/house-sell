@@ -11,13 +11,30 @@ var express = require('express');
 var mongoose = require('mongoose');
 var config = require('./config/environment');
 
-// Connect to database
-mongoose.connect(config.mongo.uri, config.mongo.options);
-mongoose.connection.on('error', function(err) {
+var db = mongoose.connection;
+db.on('connecting', function() {
+    console.log('connecting to MongoDB...');
+});
+
+db.on('error', function(error) {
+	mongoose.disconnect();
 	console.error('MongoDB connection error: ' + err);
 	process.exit(-1);
-	}
-);
+});
+db.on('connected', function() {
+	console.log('MongoDB connected!');
+});
+db.on('reconnected', function () {
+	console.log('MongoDB reconnected!');
+});
+db.on('disconnected', function() {
+	console.log('MongoDB disconnected!');
+	mongoose.connect(config.mongo.uri, config.mongo.options);
+});
+
+// Connect to database
+mongoose.connect(config.mongo.uri, config.mongo.options);
+
 // Populate DB with sample data
 if(config.seedDB) { require('./config/seed'); }
 
