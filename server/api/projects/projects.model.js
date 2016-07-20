@@ -11,6 +11,7 @@ var NewsSchema = new Schema({
   cd: {type: Date, default: Date.now},
   lm: {type: Date, default: Date.now},
   viewsCount: {type: Number, default: 0},
+  priority: {type: Number, default: 0},
   metadata:{
   	why: {type: String},
   	location: {type: String},

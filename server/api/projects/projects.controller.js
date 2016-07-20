@@ -16,18 +16,17 @@ var News = require('./projects.model');
 exports.index = function(req, res) {
   //get sort or limit options
   var sort = {};
-  req.query.sort = req.query.sort || "-lm";
-  if(req.query.sort[0] == "-"){
-    sort[req.query.sort.substr(1)] = -1;
-  }else{
-    sort[req.query.sort.substr(1)] = 1;
+  if(req.query.sort){
+    if(req.query.sort[0] == "-"){
+      sort[req.query.sort.substr(1)] = -1;
+    }else{
+      sort[req.query.sort.substr(1)] = 1;
+    }
   }
-
+  sort.lm = -1;
+  
   var skip = req.query.skip || 0;
   var limit = req.query.limit || 6;
-  if(limit === "all"){
-
-  }
 
   //get category filter
   var query = {};
